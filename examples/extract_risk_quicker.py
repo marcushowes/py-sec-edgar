@@ -8,6 +8,15 @@ import io
 import html2text
 import requests
 
+def read_file_in_chunks(filepath, chunk_size=1*1024*1024, max_size=10*1024*1024):
+    with open(filepath, "r", encoding='utf-8') as f:
+        raw_html = ""
+        chunk = f.read(chunk_size)
+        while chunk and len(raw_html) + len(chunk) <= max_size:
+            raw_html += chunk
+            chunk = f.read(chunk_size)
+    return raw_html
+
 part_pattern = re.compile("(?s)(?i)(?m)> +Part|>Part|^Part", re.IGNORECASE + re.MULTILINE)
 item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.MULTILINE)
 substitute_html = re.compile("(?s)<.*?>")
@@ -18,9 +27,7 @@ folderpath = r'C:\sec_gov\Archives\edgar\data\200406'
 filename = r'0000200406-22-000022.txt'
 filepath = os.path.join(folderpath, filename)
 
-# read it into variable
-with open(filepath, "r", encoding='utf-8') as f:
-    raw_html = f.read()
+raw_html = read_file_in_chunks(filepath)
 
 # search for the parts/items of filing and replace it with unique character to split on later
 updated_html = part_pattern.sub(">°Part", raw_html)
