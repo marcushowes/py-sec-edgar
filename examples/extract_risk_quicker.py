@@ -8,7 +8,6 @@ import io
 import html2text
 import requests
 
-
 part_pattern = re.compile("(?s)(?i)(?m)> +Part|>Part|^Part", re.IGNORECASE + re.MULTILINE)
 item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.MULTILINE)
 substitute_html = re.compile("(?s)<.*?>")
