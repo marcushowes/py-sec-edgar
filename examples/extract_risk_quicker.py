@@ -8,6 +8,7 @@ import io
 import html2text
 import requests
 
+
 part_pattern = re.compile("(?s)(?i)(?m)> +Part|>Part|^Part", re.IGNORECASE + re.MULTILINE)
 item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.MULTILINE)
 substitute_html = re.compile("(?s)<.*?>")
@@ -18,11 +19,13 @@ folderpath = r'C:\sec_gov\Archives\edgar\data\200406'
 filename = r'0000200406-22-000022.txt'
 filepath = os.path.join(folderpath, filename)
 
-updated_html = ""
+# read it into variable
 with open(filepath, "r", encoding='utf-8') as f:
-    for line in f:
-        updated_html += part_pattern.sub(">°Part", line)
-        updated_html = item_pattern.sub(">°Item", updated_html)
+    raw_html = f.read()
+
+# search for the parts/items of filing and replace it with unique character to split on later
+updated_html = part_pattern.sub(">°Part", raw_html)
+updated_html = item_pattern.sub(">°Item", updated_html)
 
 # remove tables because they can be parsed seperately
 lxml_html = lxml.html.fromstring(updated_html)
