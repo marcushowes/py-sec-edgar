@@ -8,29 +8,15 @@ import io
 import html2text
 import requests
 
-print("Downloading Apple's 10-K Filing and Extracting Sections")
-
 part_pattern = re.compile("(?s)(?i)(?m)> +Part|>Part|^Part", re.IGNORECASE + re.MULTILINE)
 item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.MULTILINE)
 substitute_html = re.compile("(?s)<.*?>")
 
 # for example, I"m going to download filing directly
 # set to the folderpath of an extracted 10-K filing
-folderpath = r'C:\sec_gov\Archives\edgar\data\320193\000032019320000096'
-filename = r'0001-(10-K)_10-K_aapl-20200926.htm'
+folderpath = r'C:\sec_gov\Archives\edgar\data\93410'
+filename = r'0000093410-22-000019.txt'
 filepath = os.path.join(folderpath, filename)
-
-# create folders
-Path(folderpath).mkdir(exist_ok=True, parents=True)
-
-# download the html file
-response = requests.get(r'https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm')
-
-# save it in the filepath created above
-with open(filepath, 'w') as f:
-    f.write(response.content.decode('utf-8'))
-
-# root = lxml.html.parse(filepath, parser=lxml.html.HTMLParser(encoding='utf-8')).getroot()
 
 # read it into variable
 with open(filepath, "r", encoding='utf-8') as f:
@@ -66,12 +52,28 @@ soup = BeautifulSoup(updated_raw_html, 'lxml')
 h = html2text.HTML2Text()
 raw_text = h.handle(soup.prettify())
 
-for idx, item in enumerate(raw_text.split("°Item")):
-    # if text is longer than 100 characters save it.
-    # could create a regex that parses first line to match [0-9]\. [A-z].+
-    # then save filename
-    if len(item) > 100:
-        with io.open(filepath.replace(".htm", f"text_{idx}.txt"), "w", encoding='utf-8') as f:
-            f.write(item)
 
-print(f"AAPL 10-k Sections Saved:\n{folderpath}")
+#filename = f"scraped_{filename}"
+#with io.open(os.path.join(folderpath, filename), "w", encoding='utf-8') as f:
+#    f.write(raw_text)
+
+
+combined_text = ""
+file_count = 0
+
+for idx, item in enumerate(raw_text.split("°Item")):
+    if "discussion and analysis" in item.lower():
+        if len(item) > 100:
+            first_line = item.splitlines()[0].strip()
+            
+            if "discussion and analysis" in first_line.lower():
+                file_count += 1
+                combined_text += item
+
+if file_count > 0:
+    filename = f"management_discussion_{filename}"
+    with io.open(os.path.join(folderpath, filename), "w", encoding='utf-8') as f:
+        f.write(combined_text)
+    
+
+print(f"Management Discussion Sections Saved:\n{folderpath}")

@@ -12,8 +12,8 @@ from py_sec_edgar.edgar_filing import SecEdgarFiling
 
 
 @click.command()
-@click.option('--ticker_list_filter', default=True)
-@click.option('--form_list_filter', default=True)
+@click.option('AAPL', default=True)
+@click.option('10-K', default=True)
 @click.option('--save_output', default=False)
 def main(ticker_list_filter, form_list_filter, save_output):
 

@@ -57,22 +57,22 @@ class BaseConfig:
                                           sec_dates_weekdays[0].day]
 
     #HTTP config
-    USER_AGENT = "Sample Company Name AdminContact@<sample company domain>.com"
+    USER_AGENT = "marcusjhowes@gmail.com"
 
 class Config(BaseConfig):
 
     # extract all contents from txt file
-    extract_filing_contents = False
+    extract_filing_contents = True
 
     # for complete list see py-sec-edgar/refdata/filing_types.xlsx
-    forms_list = ['10-K', '20-F', '10-K/A']
+    forms_list = ['10-K']
     # forms_list = ['497', '497K']
     # forms_list = ['8-K']
     # the urls of all broker are stored in index files
     # so need to download these index files
     # below just says download all of them
     # index_start_date = "1/1/1993"
-    index_start_date = "1/1/2019"
+    index_start_date = "1/1/2020"
 
     index_end_date = datetime.now().strftime("%m/%d/%Y")
 
