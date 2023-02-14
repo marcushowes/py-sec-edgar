@@ -46,7 +46,7 @@ def process_pair_of_files(file1, file2, name1, name2, folder_path):
 
     # ---------- ADD ROW TO EXCEL ----------
     df = pd.read_excel(f'{folder_path}\output.xlsx') 
-    making_excel.append_excel(df, cik, years, similarity, txt, diff)
+    making_excel.append_excel(folder_path, df, cik, years, similarity, txt, diff)
 
    
 
