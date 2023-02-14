@@ -6,7 +6,9 @@ from lxml.html.clean import clean_html
 import lxml.html
 import io
 import html2text
-import requests
+import iterating_two_files
+import making_excel
+
 
 def read_file_in_chunks(filepath, chunk_size=1*1024*1024, max_size=10*1024*1024):
     with open(filepath, "r", encoding='utf-8') as f:
@@ -23,13 +25,13 @@ substitute_html = re.compile("(?s)<.*?>")
 
 # for example, I"m going to download filing directly
 # set to the folderpath of an extracted 10-K filing
-folderpath = r'C:\sec_gov\Archives\edgar\data\1326801'
+folderpath = r'C:\sec_gov\Archives\edgar\data\732717'
 
-# ---------------- START FILE ITERATION ----------------
+
+# ---------------- FILE ITERATION AND RISK FACTOR SCRAPE ----------------
 
 for filename in os.listdir(folderpath):
 
-    filename = r'0000200406-22-000022.txt'
     filepath = os.path.join(folderpath, filename)
 
     if os.path.isfile(filepath):
@@ -80,4 +82,14 @@ for filename in os.listdir(folderpath):
                 f.write(combined_text)
             
 
-        print(f"Risk Factors Sections Saved:\n{folderpath}")
+        print(f"Risk Factors Sections Saved:\n{folderpath}, {filename}")
+
+
+# ---------------- COMPARE SIMILARITY INTO EXCEL ----------------
+
+making_excel.create_excel(folderpath)
+
+# Call the function to process the files that come a year after the other
+iterating_two_files.process_files(folderpath)
+
+print(f"\n DONE! \n")

@@ -38,10 +38,10 @@ def find_longest(string1, string2):
     length2 = len(string2)
     length_difference = abs(length1 - length2)
     if length1 >= length2:
-        string1 = "1"
+        string1 = "0"
         return (string1, length_difference)
     else:
-        string2 = "2"
+        string2 = "1"
         return (string2, length_difference)
 
 folderpath = r'C:\sec_gov\Archives\edgar\data\200406'
@@ -53,7 +53,6 @@ filepath2 = os.path.join(folderpath, file2)
 
 with open(filepath1, "r", encoding='utf-8') as f:
     text1 = f.read()
-
 with open(filepath2, "r", encoding='utf-8') as f:
     text2 = f.read()
 
@@ -62,11 +61,8 @@ cosine = cosine_similarity(text1, text2)
 jaccard = jaccard_similarity(text1, text2)
 levenshtein = levenshtein_distance(text1, text2)
 
+similarity = (cosine + jaccard + levenshtein)/3
 (string, diff) = find_longest(text1, text2)
 
-print(f"Cosine similarity = {cosine} \n")
-print(f"Jaccard similarity = {jaccard} \n")
-print(f"Levenshtein distance = {levenshtein} \n")
-print(f"Text {string} is longer by {diff} characters.")
 
 
