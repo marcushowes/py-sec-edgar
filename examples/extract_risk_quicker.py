@@ -23,58 +23,61 @@ substitute_html = re.compile("(?s)<.*?>")
 
 # for example, I"m going to download filing directly
 # set to the folderpath of an extracted 10-K filing
-folderpath = r'C:\sec_gov\Archives\edgar\data\200406'
-filename = r'0000200406-22-000022.txt'
-filepath = os.path.join(folderpath, filename)
+folderpath = r'C:\sec_gov\Archives\edgar\data\1326801'
 
-raw_html = read_file_in_chunks(filepath)
+# ---------------- START FILE ITERATION ----------------
 
-# search for the parts/items of filing and replace it with unique character to split on later
-updated_html = part_pattern.sub(">°Part", raw_html)
-updated_html = item_pattern.sub(">°Item", updated_html)
+for filename in os.listdir(folderpath):
 
-# remove tables because they can be parsed seperately
-lxml_html = lxml.html.fromstring(updated_html)
-root = lxml_html.getroottree()
+    filename = r'0000200406-22-000022.txt'
+    filepath = os.path.join(folderpath, filename)
 
-# remove tables because we can analyze them seperately
-# table = list(root.iter(tag='table'))[11]
-for i, table in enumerate(root.iter(tag='table')):
+    if os.path.isfile(filepath):
 
-    table_text = table.text_content()
+        raw_html = read_file_in_chunks(filepath)
 
-    # i just used two entries to determine whether we were looking at toc table
-    if "Financial Data" in table_text or "Mine Safety Disclosures" in table_text:
-        #print("Found Sections")
-        #print(table_text)
-        pass
-    else:
-        # drop table from HTML
-        table.drop_tree()
+        # search for the parts/items of filing and replace it with unique character to split on later
+        updated_html = part_pattern.sub(">°Part", raw_html)
+        updated_html = item_pattern.sub(">°Item", updated_html)
 
-updated_raw_html = lxml.html.tostring(root)
+        # remove tables because they can be parsed seperately
+        lxml_html = lxml.html.fromstring(updated_html)
+        root = lxml_html.getroottree()
 
-soup = BeautifulSoup(updated_raw_html, 'lxml')
+        # remove tables because we can analyze them seperately
+        # table = list(root.iter(tag='table'))[11]
+        for i, table in enumerate(root.iter(tag='table')):
 
-h = html2text.HTML2Text()
-raw_text = h.handle(soup.prettify())
+            table_text = table.text_content()
 
-combined_text = ""
-file_count = 0
+            # i just used two entries to determine whether we were looking at toc table
+            if "Financial Data" in table_text or "Mine Safety Disclosures" in table_text:
+                pass
+            else:
+                # drop table from HTML
+                table.drop_tree()
 
-for idx, item in enumerate(raw_text.split("°Item")):
-    if "risk factors" in item.lower():
-        if len(item) > 100:
-            first_line = item.splitlines()[0].strip()
+        updated_raw_html = lxml.html.tostring(root)
+        soup = BeautifulSoup(updated_raw_html, 'lxml')
+        h = html2text.HTML2Text()
+        raw_text = h.handle(soup.prettify())
+
+        combined_text = ""
+        file_count = 0
+
+        for idx, item in enumerate(raw_text.split("°Item")):
+            if "risk factors" in item.lower():
+                if len(item) > 100:
+                    first_line = item.splitlines()[0].strip()
+                    
+                    if "risk factors" in first_line.lower():
+                        file_count += 1
+                        combined_text += item
+
+        if file_count > 0:
+            filename = f"risk_factors_{filename}"
+            with io.open(os.path.join(folderpath, filename), "w", encoding='utf-8') as f:
+                f.write(combined_text)
             
-            if "risk factors" in first_line.lower():
-                file_count += 1
-                combined_text += item
 
-if file_count > 0:
-    filename = f"risk_factors_{filename}"
-    with io.open(os.path.join(folderpath, filename), "w", encoding='utf-8') as f:
-        f.write(combined_text)
-    
-
-print(f"Risk Factor Sections Saved:\n{folderpath}")
+        print(f"Risk Factors Sections Saved:\n{folderpath}")
