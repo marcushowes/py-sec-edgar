@@ -23,9 +23,8 @@ part_pattern = re.compile("(?s)(?i)(?m)> +Part|>Part|^Part", re.IGNORECASE + re.
 item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.MULTILINE)
 substitute_html = re.compile("(?s)<.*?>")
 
-# for example, I"m going to download filing directly
-# set to the folderpath of an extracted 10-K filing
-folderpath = r'C:\sec_gov\Archives\edgar\data'
+# Paste folderpath here
+folderpath = r'C:\Users\Marcus.Howes_PLA\Desktop\testing'
 
 # ---------------- FILE ITERATION AND RISK FACTOR SCRAPE ----------------
 

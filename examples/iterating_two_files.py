@@ -8,8 +8,14 @@ def separate_numbers(code_string):
     # Remove the "risk_factors_" prefix
     code = code_string.replace("risk_factors_", "")
     # Split the remaining string into separate numbers
-    numbers = code.split("-")
-    return numbers
+    numbers = code.split("_")
+    cik = numbers[0]
+    date = numbers[2]
+
+    id = numbers[3].split("-")
+    year = id[1]
+
+    return cik, date, year
 
 def process_files(folder_path, subdir_path):
     risk_factor_files = [f for f in os.listdir(subdir_path) if f.startswith("risk_factors")]
@@ -38,15 +44,19 @@ def process_pair_of_files(file1, file2, name1, name2, folder_path):
     similarity = (cosine + jaccard + levenshtein)/3
     (txt, diff) = similarity_calc.find_longest(text1, text2)
 
-    num1 = separate_numbers(name1)
-    num2 = separate_numbers(name2)
+    (cik, date1, year1) = separate_numbers(name1)
+    (cik, date2, year2) = separate_numbers(name2)
 
-    cik = int(num1[0])
-    years = f"{int(num1[1])}-{int(num2[1])}"
+    years = f"{year1}-{year2}"
+
+    length1 = len(text1)
+    length2 = len(text2)
+
 
     # ---------- ADD ROW TO EXCEL ----------
+
     df = pd.read_excel(f'{folder_path}\output.xlsx') 
-    making_excel.append_excel(folder_path, df, cik, years, similarity, txt, diff)
+    making_excel.append_excel(folder_path, df, cik, years, similarity, txt, diff, date2, length1, length2)
 
    
 
