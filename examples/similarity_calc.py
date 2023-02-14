@@ -44,25 +44,5 @@ def find_longest(string1, string2):
         string2 = "1"
         return (string2, length_difference)
 
-folderpath = r'C:\sec_gov\Archives\edgar\data\200406'
-file1 = r'risk_factors_0000200406-21-000008.txt'
-file2 = r'risk_factors_0000200406-22-000022.txt'
-
-filepath1 = os.path.join(folderpath, file1)
-filepath2 = os.path.join(folderpath, file2)
-
-with open(filepath1, "r", encoding='utf-8') as f:
-    text1 = f.read()
-with open(filepath2, "r", encoding='utf-8') as f:
-    text2 = f.read()
-
-# Values of 1 = identical. 0 = completely different
-cosine = cosine_similarity(text1, text2)
-jaccard = jaccard_similarity(text1, text2)
-levenshtein = levenshtein_distance(text1, text2)
-
-similarity = (cosine + jaccard + levenshtein)/3
-(string, diff) = find_longest(text1, text2)
-
 
 

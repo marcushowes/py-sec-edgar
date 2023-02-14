@@ -11,8 +11,8 @@ def separate_numbers(code_string):
     numbers = code.split("-")
     return numbers
 
-def process_files(folder_path):
-    risk_factor_files = [f for f in os.listdir(folder_path) if f.startswith("risk_factors")]
+def process_files(folder_path, subdir_path):
+    risk_factor_files = [f for f in os.listdir(subdir_path) if f.startswith("risk_factors")]
     risk_factor_files.sort()
 
     for i in range(0, len(risk_factor_files) - 1):
@@ -20,7 +20,7 @@ def process_files(folder_path):
         name1 = file1
         file2 = risk_factor_files[i+1]
         name2 = file2
-        process_pair_of_files(os.path.join(folder_path, file1), os.path.join(folder_path, file2), name1, name2, folder_path)
+        process_pair_of_files(os.path.join(subdir_path, file1), os.path.join(subdir_path, file2), name1, name2, folder_path)
 
 def process_pair_of_files(file1, file2, name1, name2, folder_path):
     print("Processing files: {} and {}".format(file1, file2))
