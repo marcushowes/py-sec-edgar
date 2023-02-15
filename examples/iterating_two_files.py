@@ -3,6 +3,18 @@ import similarity_calc
 import making_excel
 import pandas as pd
 
+def check_excel_for_cik(cik, excel_file_path):
+    # Load the Excel file into a pandas DataFrame
+    df = pd.read_excel(excel_file_path, header=None)
+
+    # Iterate through each row of the DataFrame
+    for index, row in df.iterrows():
+        # Check if the input integer matches any row
+        if cik == row[0]:
+            return True
+    
+    # If no match is found, return False
+    return False
 
 def separate_numbers(code_string):
     # Remove the "risk_factors_" prefix
@@ -52,6 +64,11 @@ def process_pair_of_files(file1, file2, name1, name2, folder_path):
     length1 = len(text1)
     length2 = len(text2)
 
+    #Checking if CIK exists
+    excel_file_path = r'C:\Users\Marcus.Howes_PLA\Desktop\CIKs'
+    ans = check_excel_for_cik(cik, excel_file_path)
+    if ans is False:
+        return
 
     # ---------- ADD ROW TO EXCEL ----------
 

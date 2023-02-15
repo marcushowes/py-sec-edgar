@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import re
 from lxml.html.clean import clean_html
 import lxml.html
+import pandas as pd
 import io
 import html2text
 import iterating_two_files
@@ -78,7 +79,11 @@ for root, dirs, files in os.walk(folderpath):
                 filename = f"risk_factors_{filename}"
                 with io.open(os.path.join(root, filename), "w", encoding='utf-8') as f:
                     f.write(combined_text)
-                
+
+            else:
+                # Making an excel with all the failed files
+                df = pd.read_excel(f'{folderpath}\failed_files.xlsx') 
+                making_excel.append_failed_excel(folderpath, df, filename)
 
             print(f"Risk Factors Sections Saved:\n{folderpath}, {filename}")
 
