@@ -25,7 +25,7 @@ item_pattern = re.compile("(?s)(?i)(?m)> +Item|>Item|^Item", re.IGNORECASE + re.
 substitute_html = re.compile("(?s)<.*?>")
 
 # Paste folderpath here
-folderpath = r'C:\Users\Marcus.Howes_PLA\Desktop\testing'
+folderpath = r'C:\Users\Marcus.Howes_PLA\Desktop\testing2'
 
 # ---------------- FILE ITERATION AND RISK FACTOR SCRAPE ----------------
 
